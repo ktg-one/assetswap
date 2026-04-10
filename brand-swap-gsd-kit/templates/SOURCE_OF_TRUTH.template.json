@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "workflow": "gsd-new-project -> init phase -> gsd planning -> evaluation",
+  "source_of_truth": {
+    "primary_manifest": "docs/plans/<date>-swap-features.json",
+    "template_manifest": "brand-swap-gsd-kit/templates/swap-features.template.json",
+    "bridge": "docs/plans/<date>-autonomous-gsd-bridge.md",
+    "design_contract": "docs/plans/<date>-brand-swap-agent-contract-design.md",
+    "implementation_contract": "docs/plans/<date>-brand-swap-agent-contract-implementation.md"
+  },
+  "phase_contract": {
+    "phase_1_init": [
+      "Run app-spec-agent first",
+      "Run Init-agent second",
+      "Persist swap inventory and asset replacement contract",
+      "Update primary manifest status: ready | pending_asset | blocked"
+    ],
+    "phase_2_gsd": [
+      "Plan only from source_of_truth.primary_manifest and contracts",
+      "Do not remap features",
+      "Execute swap units batch-by-batch",
+      "Respect locked systems and exclusions"
+    ],
+    "phase_3_evaluate": [
+      "Run later evaluator checks",
+      "Return PASS / FLAG / BLOCK",
+      "Verify locked systems were preserved"
+    ]
+  },
+  "manifest_statuses": [
+    "ready",
+    "pending_asset",
+    "blocked"
+  ],
+  "locked_systems_policy": "No GSAP/framer-motion/cursor/layout-shell rewrites during normal brand swaps.",
+  "note": "If required assets are missing, remain in planning-only mode and do not execute implementation batches."
+}

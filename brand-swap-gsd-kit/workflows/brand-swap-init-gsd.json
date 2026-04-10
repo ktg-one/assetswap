@@ -1,0 +1,390 @@
+{
+  "id": "workflow-1775282400000",
+  "name": "brand-swap-init-gsd",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "start-node-default",
+      "type": "start",
+      "name": "start-node-default",
+      "position": {
+        "x": -210,
+        "y": 150
+      },
+      "data": {
+        "label": "Start"
+      }
+    },
+    {
+      "id": "prompt-brief",
+      "type": "prompt",
+      "name": "brand-swap-brief",
+      "position": {
+        "x": 15,
+        "y": 120
+      },
+      "data": {
+        "label": "Brand Swap Brief",
+        "prompt": "Use this workflow for scaffolded Next.js sites where the interaction shell already works.\n\nGoal:\n1. Map exactly what must be swapped\n2. Build a source-of-truth replacement manifest\n3. Plan from the manifest\n4. Execute later only when assets exist\n\nHard rules:\n- Do not feature-map the whole app\n- Do not redesign GSAP/framer-motion/cursor/layout shell systems\n- Treat swap-features.json and .plan/SOURCE_OF_TRUTH.json as canonical truth sources\n- If assets are missing, stop in planning-only mode",
+        "variables": {}
+      }
+    },
+    {
+      "id": "subagent-app-spec",
+      "type": "subAgent",
+      "name": "app-spec-agent",
+      "position": {
+        "x": 285,
+        "y": 0
+      },
+      "data": {
+        "description": "app-spec-agent — map swap targets, directories, constraints, and locked systems",
+        "agentDefinition": "Maps only the swap surface for a scaffolded brand-swap site. Outputs exact paths, replacement types, constraints, and locked systems. Does not do generic feature mapping.",
+        "prompt": "Inspect the repo as a brand-swap cloning target. Output swap targets, exact files/directories, replacement classifications, size and placement constraints, locked systems, and required asset checklist.",
+        "outputPorts": 1,
+        "agentType": "other",
+        "commandScope": "project"
+      }
+    },
+    {
+      "id": "prompt-swap-inventory",
+      "type": "prompt",
+      "name": "persist-swap-inventory",
+      "position": {
+        "x": 585,
+        "y": 0
+      },
+      "data": {
+        "label": "Write Swap Inventory",
+        "prompt": "Persist the app-spec-agent output into docs/plans/<date>-swap-inventory.md. This becomes the first durable init artifact.",
+        "variables": {}
+      }
+    },
+    {
+      "id": "subagent-init-agent",
+      "type": "subAgent",
+      "name": "Init-agent",
+      "position": {
+        "x": 285,
+        "y": 255
+      },
+      "data": {
+        "description": "Init-agent — convert inventory into exact asset replacement contract",
+        "agentDefinition": "Consumes the swap inventory and outputs exact assets to create, typography and placement constraints, colour contract, logo/vector contract, media contract, content injection rules, and exclusions.",
+        "prompt": "Using the swap inventory as the only source of truth, build an asset-replacement contract. Include typography by screen size, logo placement and size, colour roles, videos/images, buttons, labels, content blocks, contact/social data, SEO assets, and locked-system exclusions.",
+        "outputPorts": 1,
+        "agentType": "other",
+        "commandScope": "project"
+      }
+    },
+    {
+      "id": "prompt-manifest-writer",
+      "type": "prompt",
+      "name": "write-manifest",
+      "position": {
+        "x": 585,
+        "y": 255
+      },
+      "data": {
+        "label": "Write Manifest + .plan",
+        "prompt": "Write or update:\n- docs/plans/<date>-asset-replacement-contract.md\n- docs/plans/<date>-swap-features.json\n- .plan/SOURCE_OF_TRUTH.json\n\nThe manifest must contain typography, breakpoints, logo placement and size, colours, media requirements, content areas, locked systems, verification checks, and status fields like ready / pending_asset / blocked.",
+        "variables": {}
+      }
+    },
+    {
+      "id": "prompt-assets-gate",
+      "type": "prompt",
+      "name": "assets-gate",
+      "position": {
+        "x": 900,
+        "y": 135
+      },
+      "data": {
+        "label": "Assets Ready Gate",
+        "prompt": "Decision point:\n- If required assets are missing, stop in planning-only mode and update the manifest status.\n- If required assets are ready, continue into the GSD planning phase.",
+        "variables": {}
+      }
+    },
+    {
+      "id": "prompt-planning-only",
+      "type": "prompt",
+      "name": "planning-only-mode",
+      "position": {
+        "x": 1215,
+        "y": 15
+      },
+      "data": {
+        "label": "Planning-Only Mode",
+        "prompt": "Stop here if branding/media assets are not available. Keep the repo in pending-assets mode. The manifest is the asset intake brief for later execution.",
+        "variables": {}
+      }
+    },
+    {
+      "id": "skill-gsd-new-project",
+      "type": "skill",
+      "name": "gsd-new-project",
+      "position": {
+        "x": 1215,
+        "y": 165
+      },
+      "data": {
+        "name": "gsd-new-project",
+        "description": "Initialize a new project with deep context gathering and PROJECT.md",
+        "skillPath": "C:\\Users\\kevin\\.copilot\\skills\\gsd-new-project\\SKILL.md",
+        "scope": "user",
+        "validationStatus": "valid",
+        "allowedTools": "Read, Bash, Write, Task, AskUserQuestion",
+        "outputPorts": 1,
+        "source": "copilot",
+        "executionMode": "execute"
+      }
+    },
+    {
+      "id": "skill-gsd-plan-phase",
+      "type": "skill",
+      "name": "gsd-plan-phase",
+      "position": {
+        "x": 1500,
+        "y": 165
+      },
+      "data": {
+        "name": "gsd-plan-phase",
+        "description": "Create detailed phase plan (PLAN.md) with verification loop",
+        "skillPath": "C:\\Users\\kevin\\.copilot\\skills\\gsd-plan-phase\\SKILL.md",
+        "scope": "user",
+        "validationStatus": "valid",
+        "outputPorts": 1,
+        "source": "copilot",
+        "executionMode": "execute"
+      }
+    },
+    {
+      "id": "prompt-gsd-constraint",
+      "type": "prompt",
+      "name": "gsd-source-of-truth",
+      "position": {
+        "x": 1800,
+        "y": 165
+      },
+      "data": {
+        "label": "GSD Constraint",
+        "prompt": "GSD must plan only from .plan/SOURCE_OF_TRUTH.json and swap-features.json. It should plan by replacement units, not generic app features.",
+        "variables": {}
+      }
+    },
+    {
+      "id": "skill-gsd-execute-phase",
+      "type": "skill",
+      "name": "gsd-execute-phase",
+      "position": {
+        "x": 2100,
+        "y": 165
+      },
+      "data": {
+        "name": "gsd-execute-phase",
+        "description": "Execute all plans in a phase with wave-based parallelization",
+        "skillPath": "C:\\Users\\kevin\\.copilot\\skills\\gsd-execute-phase\\SKILL.md",
+        "scope": "user",
+        "validationStatus": "valid",
+        "outputPorts": 1,
+        "source": "copilot",
+        "executionMode": "execute"
+      }
+    },
+    {
+      "id": "skill-gsd-ui-review",
+      "type": "skill",
+      "name": "gsd-ui-review",
+      "position": {
+        "x": 2400,
+        "y": 60
+      },
+      "data": {
+        "name": "gsd-ui-review",
+        "description": "Retroactive 6-pillar visual audit of implemented frontend code",
+        "skillPath": "C:\\Users\\kevin\\.copilot\\skills\\gsd-ui-review\\SKILL.md",
+        "scope": "user",
+        "validationStatus": "valid",
+        "outputPorts": 1,
+        "source": "copilot",
+        "executionMode": "execute"
+      }
+    },
+    {
+      "id": "skill-gsd-verify-work",
+      "type": "skill",
+      "name": "gsd-verify-work",
+      "position": {
+        "x": 2400,
+        "y": 270
+      },
+      "data": {
+        "name": "gsd-verify-work",
+        "description": "Validate built features through conversational UAT",
+        "skillPath": "C:\\Users\\kevin\\.copilot\\skills\\gsd-verify-work\\SKILL.md",
+        "scope": "user",
+        "validationStatus": "valid",
+        "outputPorts": 1,
+        "source": "copilot",
+        "executionMode": "execute"
+      }
+    },
+    {
+      "id": "prompt-evaluator",
+      "type": "prompt",
+      "name": "evaluator-later-agent",
+      "position": {
+        "x": 2715,
+        "y": 165
+      },
+      "data": {
+        "label": "Evaluator Agent",
+        "prompt": "Later evaluator phase: read swap-features.json and verify each replacement unit against size, placement, breakpoint, colour, content, and locked-system constraints. Return PASS / FLAG / BLOCK.",
+        "variables": {}
+      }
+    },
+    {
+      "id": "end_node_default",
+      "type": "end",
+      "name": "end_node_default",
+      "position": {
+        "x": 3030,
+        "y": 165
+      },
+      "data": {
+        "label": "End"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "edge-start-brief",
+      "from": "start-node-default",
+      "to": "prompt-brief",
+      "fromPort": "out",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-brief-appspec",
+      "from": "prompt-brief",
+      "to": "subagent-app-spec",
+      "fromPort": "out",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-brief-initagent",
+      "from": "prompt-brief",
+      "to": "subagent-init-agent",
+      "fromPort": "out",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-appspec-inventory",
+      "from": "subagent-app-spec",
+      "to": "prompt-swap-inventory",
+      "fromPort": "output",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-initagent-manifest",
+      "from": "subagent-init-agent",
+      "to": "prompt-manifest-writer",
+      "fromPort": "output",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-inventory-gate",
+      "from": "prompt-swap-inventory",
+      "to": "prompt-assets-gate",
+      "fromPort": "out",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-manifest-gate",
+      "from": "prompt-manifest-writer",
+      "to": "prompt-assets-gate",
+      "fromPort": "out",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-gate-planningonly",
+      "from": "prompt-assets-gate",
+      "to": "prompt-planning-only",
+      "fromPort": "out",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-gate-gsdnewproject",
+      "from": "prompt-assets-gate",
+      "to": "skill-gsd-new-project",
+      "fromPort": "out",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-planningonly-end",
+      "from": "prompt-planning-only",
+      "to": "end_node_default",
+      "fromPort": "out",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-gsdnewproject-plan",
+      "from": "skill-gsd-new-project",
+      "to": "skill-gsd-plan-phase",
+      "fromPort": "output",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-plan-constraint",
+      "from": "skill-gsd-plan-phase",
+      "to": "prompt-gsd-constraint",
+      "fromPort": "output",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-constraint-execute",
+      "from": "prompt-gsd-constraint",
+      "to": "skill-gsd-execute-phase",
+      "fromPort": "out",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-execute-uireview",
+      "from": "skill-gsd-execute-phase",
+      "to": "skill-gsd-ui-review",
+      "fromPort": "output",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-execute-verify",
+      "from": "skill-gsd-execute-phase",
+      "to": "skill-gsd-verify-work",
+      "fromPort": "output",
+      "toPort": "input"
+    },
+    {
+      "id": "edge-uireview-evaluator",
+      "from": "skill-gsd-ui-review",
+      "to": "prompt-evaluator",
+      "fromPort": "output",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-verify-evaluator",
+      "from": "skill-gsd-verify-work",
+      "to": "prompt-evaluator",
+      "fromPort": "output",
+      "toPort": "in"
+    },
+    {
+      "id": "edge-evaluator-end",
+      "from": "prompt-evaluator",
+      "to": "end_node_default",
+      "fromPort": "out",
+      "toPort": "in"
+    }
+  ],
+  "createdAt": "2026-04-04T13:20:00.000Z",
+  "updatedAt": "2026-04-04T13:20:00.000Z",
+  "subAgentFlows": []
+}

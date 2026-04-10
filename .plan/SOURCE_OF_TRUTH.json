@@ -1,0 +1,68 @@
+{
+  "version": "1.0",
+  "workflow": "ir-at-aspect-agent -> init-agent -> features.json -> gsd-new-project -> gsd-code-mapping -> gsd-add-phase -> gsd-research-phase -> gsd-plan-phase -> gsd-execute-phase -> gsd-verify-work",
+  "site_type": "xcs-nextjs",
+  "source_of_truth": {
+    "primary_manifest": "docs/plans/features.json",
+    "phase_plans": "docs/plans/phases/",
+    "codebase_map": ".planning/codebase/",
+    "research": ".planning/phases/*/RESEARCH.md",
+    "implementation": "docs/plans/phases/*/PLAN.md"
+  },
+  "phase_sequence": {
+    "phase_0_ir": {
+      "agent": "ir-at-aspect-agent",
+      "output": "docs/plans/ir-assessment.md",
+      "description": "Initial site assessment and requirements gathering"
+    },
+    "phase_1_init": {
+      "agent": "init-agent",
+      "output": "docs/plans/features.json",
+      "description": "Create feature manifest with 200+ test cases"
+    },
+    "phase_2_gsd_init": {
+      "command": "/gsd:new-project",
+      "output": ".planning/PROJECT.md, .planning/config.json",
+      "description": "Initialize GSD project context"
+    },
+    "phase_3_code_mapping": {
+      "command": "/gsd:map-codebase",
+      "output": ".planning/codebase/ (7 documents)",
+      "description": "Map existing codebase structure"
+    },
+    "phase_4_add_phase": {
+      "command": "/gsd:add-phase <description>",
+      "output": ".planning/phases/{N}-{slug}/",
+      "description": "Create new phase in roadmap"
+    },
+    "phase_5_research": {
+      "command": "/gsd:research-phase <phase>",
+      "output": ".planning/phases/{N}-{slug}/RESEARCH.md",
+      "description": "Research implementation approach"
+    },
+    "phase_6_plan": {
+      "command": "/gsd:plan-phase <phase>",
+      "output": ".planning/phases/{N}-{slug}/PLAN.md",
+      "description": "Create detailed implementation plan"
+    },
+    "phase_7_execute": {
+      "command": "/gsd:execute-phase <phase>",
+      "output": "Implemented features",
+      "description": "Execute implementation"
+    },
+    "phase_8_verify": {
+      "command": "/gsd:verify-work <phase>",
+      "output": "Verification report",
+      "description": "Verify implemented features"
+    }
+  },
+  "manifest_status": [
+    "ready",
+    "pending_assets",
+    "blocked",
+    "in_progress",
+    "completed"
+  ],
+  "locked_systems_policy": "No rewrites of core Next.js architecture, API routes, or database schemas during feature implementation unless explicitly planned.",
+  "note": "This scaffold is for Next.js XCS sites. Features are implemented sequentially through GSD phases."
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "swap_features_manifest",
+  "purpose": "Reusable template that replaces feature_list.json for clone-and-rebrand workflows.",
+  "site": {
+    "name": "REPLACE_ME",
+    "framework": "REPLACE_ME",
+    "execution_model": "app-spec-agent inventory -> Init-agent replacement contract -> GSD planning -> autonomous execution"
+  },
+  "locked_systems": [
+    {
+      "id": "locked_system_id",
+      "label": "REPLACE_ME",
+      "paths": [
+        "path/to/locked/system"
+      ],
+      "rule": "What must never change during a normal brand swap."
+    }
+  ],
+  "required_assets_to_create": [
+    {
+      "asset_id": "asset_name",
+      "type": "svg|png|mp4|font_family|copy_set|icon_set",
+      "target_paths": [
+        "path/to/consumer"
+      ],
+      "required_output": "What needs to be produced.",
+      "dimensions": {
+        "desktop": "REPLACE_ME",
+        "tablet": "REPLACE_ME",
+        "mobile": "REPLACE_ME"
+      },
+      "constraint": "Replacement bounds and non-negotiables."
+    }
+  ],
+  "swap_units": [
+    {
+      "id": "swap_unit_id",
+      "category": "identity|typography|content|media|seo|buttons_and_labels|content_and_media",
+      "replacement_type": "tokenized|data-driven|component swap|constrained override|locked",
+      "paths": [
+        "path/to/file"
+      ],
+      "what_to_swap": [
+        "exact thing to replace"
+      ],
+      "assets_needed": [
+        "asset or content needed before execution"
+      ],
+      "dimensions": {
+        "optional_key": "optional_value"
+      },
+      "constraints": [
+        "What cannot be broken during replacement."
+      ],
+      "status": "pending_asset",
+      "verification_checks": [
+        "size ok",
+        "placement ok",
+        "breakpoint ok"
+      ]
+    }
+  ],
+  "maker_checklist": {
+    "copy_assets": [
+      "copy items required before execution"
+    ],
+    "design_assets": [
+      "design items required before execution"
+    ],
+    "media_assets": [
+      "media items required before execution"
+    ]
+  }
+}
