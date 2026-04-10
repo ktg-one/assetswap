@@ -70,6 +70,43 @@ During feature implementation: no rewrites of core Next.js architecture, API rou
 - **app-spec-agent** (Phase 0): Maps project specs to detailed XML specification. Uses opus, max effort, 20 turns.
 - **init-agent** (Phase 1): Creates feature_list.json with 200+ test cases, init.sh, project skeleton.
 
+## Skill Usage Rule (MANDATORY)
+
+**Output quality drops 60% when executing without skill knowledge loaded. This is proven across multiple sessions. DO NOT SKIP THIS.**
+
+Before writing ANY code:
+1. Identify which installed skills are relevant to the current task
+2. Invoke them with `/skill-name` to load domain knowledge into context
+3. THEN write code with that knowledge loaded
+
+This eliminates debug cycles. Code is right the first time when skills are consulted.
+
+**Skill categories available:**
+- React/Next.js: `vercel-react-best-practices`, `vercel-composition-patterns`, `vercel-react-view-transitions`
+- UI: `shadcn`, `shadcn-ui`, `tailwind-css`, `tailwindcss-accessibility`
+- Animation: `gsap-plugins`, `gsap-scrolltrigger`, `framer-motion-animator`, `awwwards-animations`
+- Scroll: `scroll-experience`, `scrollytelling`, `locomotive-scroll`, `implement_lenis_scroll`
+- 3D: `threejs-webgl`
+- WordPress: `wp-plugin-development`, `wp-block-themes`, `wp-block-development`, `wp-rest-api`, `wp-performance`, `wordpress-router`, `wp-cli`
+- Generative UI: `openui`, `copilotkit`
+- Quality: `implementation-debugging`, `web-performance-optimization`, `eslint-prettier-config`, `react-doctor`
+- Design: `high-end-visual-design`, `design-taste-frontend`, `web-design-guidelines`, `redesign-existing-projects`
+- Discovery: `/skill-lookup`, `/find-skills` — use when unsure which skill applies
+
+## Orchestration — Available CLI Agents
+
+Claude owns strategy and synthesis. Dispatch parallel work to these agents:
+
+| Agent | Invoke | Use for |
+|-------|--------|---------|
+| **Gemini CLI** | `gemini -p "prompt"` or `consult_gemini` MCP | Research, review, web search, second opinion |
+| **Codex CLI** | `codex exec "prompt"` | Bulk/repetitive edits, file transforms |
+| **Jules CLI** | `/jules-cli` skill | Async background tasks, CI jobs |
+| **CodeRabbit** | `/coderabbit:code-review` skill | PR review, security audit, autofix |
+| **GitHub Copilot** | Via skill integration | Code suggestions, completions |
+
+Pass explicit instructions per agent. No duplicated work.
+
 ## MCP Integration
 
 Gateway at `.mcp/gateway-webdev.py` (FastMCP 3) mounts: figma, vercel, in-memoria, next-devtools, serena. Requires `FIGMA_API_KEY` and `VERCEL_API_KEY` in `.mcp/.env`.
