@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Session Boot (DO THIS FIRST)
+
+1. Read `$MEMORY_DIR/last-signout.json` — this is what the previous session was doing, what's unresolved, and what to do next
+2. Read `$MEMORY_DIR/MEMORY.md` — full memory index with links to detailed files
+3. If `last-signout.json` exists, announce: "Resuming from [date]: [summary]. Next steps: [next_steps]. Unresolved: [unresolved]"
+4. If it doesn't exist, say so — this is a fresh start
+
+After completing work, run `/signout` to write the marker for the next session.
+
 ## What This Is
 
 Autonomous Next.js scaffolding harness. Two-agent system that builds complete web apps across multiple sessions using `brand-swap-gsd-kit/` (Python SDK wrapper) and GSD workflow orchestration.
