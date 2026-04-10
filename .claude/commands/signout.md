@@ -1,15 +1,18 @@
 ---
 name: signout
-description: End-of-session memory dump to all systems. Writes a timestamped signout marker so next session can check continuity.
+description: End-of-session memory dump. Appends to session-log.json and writes last-signout.json for next session boot.
 ---
 
 # /signout — Session End Memory Dump
 
-Save everything learned this session, then write a signout marker the next session can detect.
+## 1. Append Current Signout to Log, Then Overwrite Last
 
-## 1. Write Signout Marker
+Read `$MEMORY_DIR/session-log.json`. If it doesn't exist, create it as `{ "sessions": [] }`.
 
-Create/update `$MEMORY_DIR/last-signout.json`:
+Append the current `last-signout.json` content (if it exists) to the `sessions` array.
+
+Then overwrite `$MEMORY_DIR/last-signout.json` with this session's data:
+
 ```json
 {
   "session_date": "YYYY-MM-DD",
@@ -22,43 +25,24 @@ Create/update `$MEMORY_DIR/last-signout.json`:
 }
 ```
 
-The next session should READ this file first to restore context.
+Result: `last-signout.json` = latest session only. `session-log.json` = all previous sessions in one file.
 
-## 2. File-Based Memory (PRIMARY — always loaded)
+## 2. File-Based Memory (PRIMARY)
 
-Write to `$MEMORY_DIR/MEMORY.md` and individual `.md` files:
-- New feedback, project context, user preferences, or references
-- Update existing memories if they've changed
-- Keep MEMORY.md index under 200 lines
+Write to `$MEMORY_DIR/MEMORY.md` and individual `.md` files.
 
-## 3. Self-Improving Agent (Skill Patterns)
+## 3. Self-Improving Agent
 
-If skills were used, update:
-- `~/.claude/skills/self-improving-agent/memory/semantic/semantic-patterns.json` — add patterns with confidence
-- `~/.claude/skills/self-improving-agent/memory/episodic/2026/YYYY-MM-DD-{project}.json` — log episode
-- Note what worked, what failed, why
+Update `~/.claude/skills/self-improving-agent/memory/` if skills were used.
 
 ## 4. mem0
 
-Store key decisions/preferences via MCP:
-```
-mcp__mem0__add-memory: key facts, decisions, user preferences
-```
+`mcp__mem0__add-memory` for key decisions/preferences.
 
-## 5. Local Project Memory
+## 5. What to Save
 
-If working in a specific project, also save to that project's memory dir.
+Decisions and WHY. Patterns. User corrections. Project context. Skill outcomes.
 
-## What to Save
-- Decisions made and WHY
-- Patterns that worked or failed
-- User corrections or preferences (feedback type)
-- New project context
-- References to external resources
-- Skill usage outcomes
+## 6. What NOT to Save
 
-## What NOT to Save
-- Code patterns derivable from the codebase
-- Git history
-- Ephemeral task details
-- Anything already in CLAUDE.md
+Code patterns from codebase. Git history. Ephemeral details. Anything in CLAUDE.md.
